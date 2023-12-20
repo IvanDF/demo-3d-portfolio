@@ -1,11 +1,19 @@
 import { useAnimations, useGLTF } from "@react-three/drei";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import foxScene from "../assets/3d/fox.glb";
 
 export const Fox = ({ currentAnimation, ...props }) => {
   const group = useRef();
   const { nodes, materials, animations } = useGLTF(foxScene);
   const { actions } = useAnimations(animations, group);
+
+  useEffect(() => {
+    Object.values(actions).forEach((action) => action.stop());
+
+    if (actions[currentAnimation]) {
+      actions[currentAnimation].play();
+    }
+  }, [actions, currentAnimation]);
 
   return (
     <group ref={group} {...props}>
